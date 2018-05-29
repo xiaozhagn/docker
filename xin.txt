@@ -1,1 +1,303 @@
 welcome to github
+9、14号：
+
+github:
+
+1、克隆远程厂库：
+[root@node1 test]# git clone git@github.com:xiaoluoge11/test.git
+Cloning into 'test'...
+remote: Counting objects: 12, done.
+remote: Compressing objects: 100% (7/7), done.
+remote: Total 12 (delta 0), reused 12 (delta 0), pack-reused 0
+Receiving objects: 100% (12/12), done.
+
+2、修改提交：
+[root@node1 test]# git add test.txt 
+[root@node1 test]# git commit -m "git@github.com:xiaozhagn/xiaozhang.gitcommit first"
+[master 2344709] commit first
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+3、提交到远端长裤：
+[root@node1 test]# git push
+#出现错误
+No refs in common and none specified; doing nothing. Perhaps you should specify a branch such as 
+此报错意思为git不知道您当前提交的版本 
+解决办法：
+git push origin master
+4、在工作区内拉取代码：
+ git pull <远程主机名> <远程分支名>:<本地分支名>
+[root@node1 test]# git pull
+Already up-to-date.
+
+第二种：
+
+第一重后悔：
+
+1、直接修改了文件，还没有提交到缓存区：
+[root@node1 test]# echo "second" >> test.txt 
+[root@node1 test]# git status
+# On branch master
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#       modified:   test.txt
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+
+2、后悔药：
+[root@node1 test]# git checkout -- test.txt 
+[root@node1 test]# cat test.txt 
+first xiaoluo
+
+第二重后悔：
+修改文件已经提交到缓存区：
+[root@node1 test]# echo "second xiaoluo" >> test.txt
+[root@node1 test]# git add test.txt 
+[root@node1 test]# git log
+[root@node1 test]# git reset 21f7a52e86290ac -- test.txt 
+
+四三重后悔药：
+已经提交到了版本：
+[root@node1 test]# echo "sendcond xiaoluo" >> test.txt 
+[root@node1 test]# git add test.txt 
+[root@node1 test]# git commit -m "second commit"
+[master 423440c] second commit
+ 1 file changed, 1 insertion(+)
+[root@node1 test]# git reset --hard HEAD^
+HEAD is now at 2344709 commit first
+[root@node1 test]# cat test.txt 
+first xiaoluo
+
+##再倒退到上个版本(回到过去)：
+[root@node1 test]# git reset --hard HEAD^
+HEAD is now at 21f7a52 test
+[root@node1 test]# cat test.txt 
+dasdasdsadsadas
+dasdxiaoluotest
+
+##再次回到刚刚提交的second commit穿越到将来):通过git reflog查看所有提交版本回到未来。
+root@node1 test]# git reflog
+2344709 HEAD@{0}: pull: Fast-forward
+1c10449 HEAD@{1}: reset: moving to 1c10449
+36dc0f6 HEAD@{2}: reset: moving to HEAD^^
+21f7a52 HEAD@{3}: reset: moving to HEAD^
+2344709 HEAD@{4}: reset: moving to HEAD^
+423440c HEAD@{5}: commit: second commit
+2344709 HEAD@{6}: pull: Fast-forward
+21f7a52 HEAD@{7}: reset: moving to HEAD^
+2344709 HEAD@{8}: commit: commit first
+21f7a52 HEAD@{9}: clone: from git@github.com:xiaoluoge11/test.git
+[root@node1 test]# git reset --hard 1c10449
+HEAD is now at 1c10449 first commit
+[root@node1 test]# ls
+README.md
+[root@node1 test]# git reset --hard 423440c
+HEAD is now at 423440c second commit
+[root@node1 test]# ls
+README.md  test.txt  xiaoluo.txt
+[root@node1 test]# cat test.txt 
+first xiaoluo
+sendcond xiaoluo
+
+
+5、本地修改文件提交：
+[root@node1 test]# rm -rf ./*
+[root@node1 test]# 
+[root@node1 test]# 
+[root@node1 test]# ls
+[root@node1 test]# git add /test/test/
+warning: You ran 'git add' with neither '-A (--all)' or '--ignore-removal',
+whose behaviour will change in Git 2.0 with respect to paths you removed.
+Paths like 'README.md' that are
+removed from your working tree are ignored with this version of Git.
+
+* 'git add --ignore-removal <pathspec>', which is the current default,
+  ignores paths you removed from your working tree.
+
+* 'git add --all <pathspec>' will let you also record the removals.
+
+Run 'git status' to check the paths you removed from your working tree.
+
+[root@node1 test]# git commit -m "delete file"
+# On branch master
+# Your branch is ahead of 'origin/master' by 1 commit.
+#   (use "git push" to publish your local commits)
+#
+# Changes not staged for commit:
+#   (use "git add/rm <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#       deleted:    README.md
+#       deleted:    test.txt
+#       deleted:    xiaoluo.txt
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+
+6、强制推送到远端：
+git pull
+
+
+
+
+
+在版本里面删除文件：
+[root@node1 test]# rm xiaoluo.txt 
+rm: remove regular file iaoluo.txt y
+[root@node1 test]# pwd
+/test/test
+[root@node1 test]# git add /test/test/ -A
+[root@node1 test]# git status
+# On branch master
+# Your branch is behind 'origin/master' by 1 commit, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#       deleted:    xiaoluo.txt
+#
+[root@node1 test]# ls
+README.md
+[root@node1 test]# git commit -m "delete xiaoluo.txt"
+[master 773f97d] delete xiaoluo.txt
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 xiaoluo.txt
+[root@node1 test]# git status
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 1 different commit each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+nothing to commit, working directory clean
+[root@node1 test]# ls
+README.md
+[root@node1 test]# git push
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+To git@github.com:xiaoluoge11/test.git
+ ! [rejected]        master -> master (non-fast-forward)
+error: failed to push some refs to 'git@github.com:xiaoluoge11/test.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+hint: before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+##本地和远端不一样，要推上去必须强制推：
+[root@node1 test]# git push -f
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+Counting objects: 3, done.
+Compressing objects: 100% (1/1), done.
+Writing objects: 100% (2/2), 233 bytes | 0 bytes/s, done.
+Total 2 (delta 0), reused 1 (delta 0)
+To git@github.com:xiaoluoge11/test.git
+ + 79a9632...773f97d master -> master (forced update)
+
+
+
+###一行查看发布信息：
+[root@node1 test]# git log --pretty=oneline
+c51eef76682212eb2c10761c6cda93570d9a3a34 commit test.txt
+36dc0f62fd51476ead04dc7af6333efc50bdc5e8 commit xiaoluo
+1c10449f94ff98ac881e646995123f39b6a6e604 first commit
+
+
+
+##远端被别人修改，我们就先恢复本地，在用git push -f强制提交。
+
+
+
+打标签回滚：
+[root@node1 test]# git add *
+[root@node1 test]# git commit -m "delete test"
+# On branch master
+# Changes not staged for commit:
+#   (use "git add/rm <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#       deleted:    test.txt
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+[root@node1 test]# git rm test.txt
+rm 'test.txt'
+[root@node1 test]# git commit -m "delete test"
+[master 6fc2cb7] delete test
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 test.txt
+[root@node1 test]# git tag -a v1.0 -m "delete test.txt"
+
+##查看打标签的版本：
+1、[root@node1 test]# git tag
+v1.0
+
+2、推送到远端：
+[root@node1 test]# git push
+
+3、回到上一个版本，可以知道test.txt文件已经恢复：
+[root@node1 test]# git reset --hard HEAD^
+HEAD is now at c51eef7 commit test.txt
+[root@node1 test]# ls
+README.md  test.txt  xiaoluo.txt
+
+4、并且打上标签，并且推送到远端：
+[root@node1 test]# git tag -a v2.0 -m "reset master"
+[root@node1 test]# git tag
+v1.0
+v2.0
+
+5、我们看大文件恢复到三个，并且已经推送到了远端：
+[root@node1 test]# git push -f
+[root@node1 test]# ls
+README.md  test.txt  xiaoluo.txt
+
+6、我们恢复到，v1.0的版本（已经test.txt），并且推送到远端：
+[root@node1 test]# git reset --hard v1.0
+HEAD is now at 6fc2cb7 delete test
+[root@node1 test]# ls
+README.md  xiaoluo.txt
+[root@node1 test]# git push
+
+
+
+
+7、删除版本：
+[root@node1 test]# git tag
+v1.0
+v2.0
+[root@node1 test]# git tag -d v1.0
+Deleted tag 'v1.0' (was e4d4a8c)
+[root@node1 test]# git tag
+v2.0
+
+修改版本：
+[root@node1 test]# git tag v3.0 -f v2.0
+[root@node1 test]# git tag
+v2.0
+v3.0
+
+***在我们新增一个版本的时候，这个默认使用最后一次commit提交的版本：
